@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Prediction Form</title>
+</head>
+<body>
+    <h1>Gas Prediction Form</h1>
+    <form id="predictionForm">
+        <label for="gasType">Enter the gas you have (e.g., ch4, co2, nitrous): </label>
+        <input type="text" id="gasType" name="gasType" required>
+        <br>
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+
+    <h2>Prediction Result:</h2>
+    <p id="predictionResult"></p>
+
+    <script>
+        function predict() {
+            var gasType = document.getElementById("gasType").value;
+
+            // Send a POST request to the Flask API
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "gas": gasType }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the prediction result on the page
+                document.getElementById("predictionResult").innerText = data.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
